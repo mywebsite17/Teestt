@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pwa-cache-6334828961782290838687';
+const CACHE_NAME = 'pwa-cache-9865075401782291317806';
 const urlsToCache = [ './', './index.html', './offline.html', './icon-192.png', './icon-512.png', './manifest.json' ];
 
 self.addEventListener('install', event => {
@@ -24,14 +24,27 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        return response || fetch(event.request).catch(() => {
-          if (event.request.mode === 'navigate') {
-            return caches.match('./offline.html');
-          }
-        });
-      })
-  );
+  // استراتيجية شبكة أولاً (Network-First) لصفحة التنقل لتعمل التحديثات فوراً عند وجود نت
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then(networkResponse => {
+          return caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, networkResponse.clone());
+            return networkResponse;
+          });
+        })
+        .catch(() => {
+          return caches.match(event.request) || caches.match('./index.html') || caches.match('./offline.html');
+        })
+    );
+  } else {
+    // باقي الملفات كاش أولاً لسرعة التصفح وتوفير البيانات
+    event.respondWith(
+      caches.match(event.request)
+        .then(response => {
+          return response || fetch(event.request);
+        })
+    );
+  }
 });
