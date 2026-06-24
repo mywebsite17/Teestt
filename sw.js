@@ -1,11 +1,11 @@
-const CACHE_NAME = 'pwa-cache-v1782285708815';
-const urlsToCache = [ './', './index.html?v=v1782285708815', './offline.html?v=v1782285708815', './icon-192.png?v=v1782285708815', './icon-512.png?v=v1782285708815', './manifest.json?v=v1782285708815' ];
+const CACHE_NAME = 'pwa-cache-6334828961782290838687';
+const urlsToCache = [ './', './index.html', './offline.html', './icon-192.png', './icon-512.png', './manifest.json' ];
 
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
   );
-  self.skipWaiting();
+  self.skipWaiting(); // لتشغيل الإصدار الجديد فوراً
 });
 
 self.addEventListener('activate', event => {
@@ -20,7 +20,7 @@ self.addEventListener('activate', event => {
       );
     })
   );
-  self.clients.claim();
+  self.clients.claim(); // للسيطرة على الصفحات المفتوحة بالنسخة الجديدة فوراً
 });
 
 self.addEventListener('fetch', event => {
@@ -29,7 +29,7 @@ self.addEventListener('fetch', event => {
       .then(response => {
         return response || fetch(event.request).catch(() => {
           if (event.request.mode === 'navigate') {
-            return caches.match('./offline.html?v=v1782285708815');
+            return caches.match('./offline.html');
           }
         });
       })
