@@ -1,12 +1,12 @@
 {
-  "name": "Topics App",
-  "short_name": "Topics App",
-  "description": "Topics App",
+  "name": "My PWA App",
+  "short_name": "PWA App",
+  "description": "",
   "start_url": "./index.html",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#ffffff",
-  "theme_color": "#342273",
+  "theme_color": "#550f8f",
   "icons": [
     {
       "src": "./icon-192.png",
